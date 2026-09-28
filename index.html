@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сравнение для zeeframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F3F3EF; --surface:#FFFFFF; --ink:#17171A; --muted:#66666E; --line:#DEDDD6;
+  --accent:#2E5E52; --accent-soft:#E3EEEA; --rf:#7A4B14; --rf-soft:#F5EBDD;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111112; --surface:#1A1A1C; --ink:#ECECE8; --muted:#9C9CA4; --line:#2C2C30;
+    --accent:#86C9B4; --accent-soft:#1D2B27; --rf:#E3B77C; --rf-soft:#2A2218; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111112; --surface:#1A1A1C; --ink:#ECECE8; --muted:#9C9CA4; --line:#2C2C30;
+  --accent:#86C9B4; --accent-soft:#1D2B27; --rf:#E3B77C; --rf-soft:#2A2218; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums;padding-inline:20px}
+.wrap{max-width:1240px;margin:0 auto;padding-block:40px 80px}
+a{color:inherit}
+h1{font-size:clamp(28px,4vw,40px);font-weight:500;line-height:1.1;letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+.intro{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}
+.intro p{margin:0;color:var(--muted);max-width:60ch}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:28px 0 36px;overflow:hidden}
+.stats div{padding:16px 18px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font-size:26px;font-weight:500;line-height:1.1}
+.stats span{font-size:13px;color:var(--muted)}
+.ref{margin-bottom:36px}
+.ref .row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ref figure{margin:0}
+.ref img{width:100%;height:auto;border-radius:12px;display:block;border:1px solid var(--line)}
+.ref figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-decoration:none;font-size:14px;background:var(--surface)}
+.chip span{color:var(--muted);margin-left:4px}
+.chip:hover,.chip:focus-visible{border-color:var(--ink);outline:none}
+.filter{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:14px;color:var(--muted)}
+.filter button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.filter button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.group{padding-top:32px}
+.group h2{font-size:24px;font-weight:500;margin:0 0 16px;display:flex;gap:10px;align-items:baseline}
+.group h2 span{font-size:14px;color:var(--muted)}
+.lead{color:var(--muted);margin:-8px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid.small{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.card[hidden]{display:none}
+.card figure{margin:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.shot{display:block;cursor:zoom-in}
+.shot.full{cursor:zoom-out}
+.shot.full img{max-height:none!important}
+.shot:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.shot img{display:block;width:100%;height:auto;max-height:560px;object-fit:cover;object-position:top}
+.small .shot img{max-height:260px}
+.seg{display:flex;gap:4px;padding:8px;border-top:1px solid var(--line)}
+.seg button{font:inherit;font-size:13px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 12px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg button:focus-visible,.filter button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.meta{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.head{display:flex;gap:10px;align-items:baseline}
+.num{font-size:13px;color:var(--muted)}
+.card h3{font-size:17px;font-weight:500;margin:0;line-height:1.3;text-wrap:balance}
+.tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--accent-soft);color:var(--accent)}
+.tag.rf{background:var(--rf-soft);color:var(--rf)}
+.score{font-size:12px;color:var(--muted)}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px}
+dt{color:var(--muted);white-space:nowrap}
+dd{margin:0}
+.note{margin:0;font-size:14px;color:var(--muted)}
+.links{margin-top:auto;display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
+.links a{text-decoration:none;border-bottom:1px solid var(--line)}
+.links a:hover{border-color:var(--ink)}
+.plain{margin:0;padding-left:18px;color:var(--muted);font-size:14px;columns:2;column-gap:32px}
+.plain li{margin-bottom:4px;break-inside:avoid}
+.failed .u{color:var(--ink)}
+details{margin-top:12px}
+summary{cursor:pointer;font-weight:500}
+@media (max-width:860px){
+  .intro,.ref .row{grid-template-columns:1fr}
+  .grid,.grid.small{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stats div:nth-child(3){border-left:0}
+  .stats div:nth-child(n+3){border-top:1px solid var(--line)}
+  .plain{columns:1}
+  dl{grid-template-columns:1fr}
+  .filter{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+<div class="wrap">
+  <div class="eyebrow">zeeframes · блок «площадки против своего сайта»</div>
+  <div class="intro">
+    <h1>30 референсов блока сравнения под стиль zeeframes</h1>
+    <p>Отбирал по формам, а не по цвету: каждый блок смотрел в ч/б рядом со строками «Six reasons» на /about и бенто «What’s included» на /services/mvp-design. Только три формы — две колонки или карточки, строки-пары, таблица-матрица; в каждой стороне от трёх пунктов словами. Сначала весь referest, остальное — живые сайты, шаблоны Framer и Webflow, галереи. Внутри групп первыми идут референсы с referest. Клик по кадру раскрывает его целиком.</p>
+  </div>
+  <div class="stats">
+    <div><b>11 121</b><span>скриншот referest просмотрен листами: все 5 945 секций и 5 176 страниц нужных индустрий</span></div>
+    <div><b>162</b><span>блока, похожих на сравнение, нашли детекторы на referest; каждый я открыл в полном размере</span></div>
+    <div><b>7</b><span>с referest прошли отбор с оценкой «одна студия» 4–5, ещё один — в запасе</span></div>
+    <div><b>23</b><span>добрано из интернета из 211 снятых кандидатов; концептов в основной подборке нет</span></div>
+  </div>
+  <section class="ref">
+    <div class="eyebrow">Эталон zeeframes</div>
+    <div class="row">
+      <figure><img src="img/zf-rows.jpg" alt="Строки Six reasons на странице About"><figcaption>/about — пронумерованные строки «Six reasons»</figcaption></figure>
+      <figure><img src="img/zf-bento.jpg" alt="Бенто What's included на странице MVP Design"><figcaption>/services/mvp-design — бенто «What’s included»</figcaption></figure>
+      <figure><img src="img/zf-faq.jpg" alt="FAQ zeeframes на тёмном фоне"><figcaption>FAQ — карточки с тонкой рамкой</figcaption></figure>
+    </div>
+  </section>
+  <nav class="nav" aria-label="Формы"><a class="chip" href="#columns">Две колонки или карточки <span>13</span></a><a class="chip" href="#rows">Строки-пары <span>9</span></a><a class="chip" href="#matrix">Таблица-матрица <span>8</span></a><a class="chip" href="#reserve">Запас <span>10</span></a><a class="chip" href="#other">Не открылись</a>
+    <div class="filter" role="group" aria-label="Источник"><button type="button" data-f="all" aria-pressed="true">Все</button><button type="button" data-f="rf" aria-pressed="false">Только referest</button></div>
+  </nav>
+  <section class="group" id="columns"><h2>Две колонки или карточки <span>13</span></h2><div class="grid">
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/contented-0.jpg" width="1400" height="647" loading="lazy" alt="Contented — «не учим / учим»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">01</span><h3>Contented — «не учим / учим»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>шапка как у zeeframes: H2 строчными слева, приглушённый абзац справа по верхнему краю; подписи сторон крупно на волоске, пункты на тире без плашек</dd>
+<dt>Чем интересен</dt><dd>вся разница держится на типографике: нет ни карточек, ни цвета, только ✕ и ✓ в конце линейки</dd>
+<dt>Не брать</dt><dd>синий акцент на отметках — у zeeframes это будет лаймовый</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/contented-6" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://contented.ru/corporativnoye-obuchenye" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/tsaplin-0.jpg" width="960" height="390" loading="lazy" alt="Tsaplin — «Преимущества перед другими курсами»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">02</span><h3>Tsaplin — «Преимущества перед другими курсами»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>нумерация 01–05 как в строках «Six reasons», серая приглушённая карточка против белой, скругление ~16 px, гротеск строчными</dd>
+<dt>Чем интересен</dt><dd>плохая сторона — фон секции, хорошая поднимается белой карточкой; пятый пункт выцветает</dd>
+<dt>Не брать</dt><dd>полупрозрачные декоративные иконки в сером поле</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/tsaplin-online" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://tsaplin.online" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/vimedia-0.jpg" width="959" height="705" loading="lazy" alt="VI-media — «By Yourself / With Us»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">03</span><h3>VI-media — «By Yourself / With Us»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>тёмная секция, крупный H2 строчными, текстовые табы с линией-индикатором как якорные табы zeeframes, две половины одного контейнера</dd>
+<dt>Чем интересен</dt><dd>разный масштаб сторон: шесть шагов «сами» против одного шага «с нами», сверху часы 36,5 ↔ 2</dd>
+<dt>Не брать</dt><dd>табы Briefly / In detail в подборку не идут — видны обе стороны одновременно, табы только меняют подробность</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/vimedia-pro-en" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://vimedia.pro/en" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/wavespace-0.jpg" width="1400" height="1221" loading="lazy" alt="Wavespace — «In-house hire, freelancer, or Wavespace?»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">04</span><h3>Wavespace — «In-house hire, freelancer, or Wavespace?»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 5/5 · рубрика 10/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow «/ THE HONEST TRADE-OFF», H2 слева и абзац справа, пункт = жирный тезис + приглушённое пояснение, тонкие ✓ и ✕</dd>
+<dt>Чем интересен</dt><dd>дизайн-агентство против «традиционного агентства» — ровно наш сюжет, и никаких карточек: две колонки на фоне секции</dd>
+<dt>Не брать</dt><dd>сплошную синюю заливку секции — перекрасить в чёрную или кремовую</dd>
+</dl>
+<div class="links"><a href="https://wavespace.webflow.io/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/evoke-0.jpg" width="1400" height="1030" loading="lazy" alt="Evoke — «The Evoke® Way / The Old Way»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">05</span><h3>Evoke — «The Evoke® Way / The Old Way»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>контрастная белая ячейка в тёмной секции — как белая CTA-карточка в бенто zeeframes; заголовок сверху, пункты прижаты к низу карточки</dd>
+<dt>Чем интересен</dt><dd>смелая композиция: белая карточка выше и ярче, тёмная «старый способ» сдвинута вниз и тонет в фоне</dd>
+<dt>Не брать</dt><dd>кружки-маркеры с галочкой — заменить на ✦</dd>
+</dl>
+<div class="links"><a href="https://evoke-agency.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/genesy-0.jpg" width="1400" height="878" loading="lazy" alt="Genesy — «Two ways this goes. We have seen both.»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">06</span><h3>Genesy — «Two ways this goes. We have seen both.»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow с номером секции «/ 006 /», H2 и абзац слева, контурная пилюля-кнопка, справа строки на волосках</dd>
+<dt>Чем интересен</dt><dd>стороны стоят одна над другой: сначала пять «без нас», под ними пять «с нами» — читается как история</dd>
+<dt>Не брать</dt><dd>слишком мелкий текст пунктов — увеличить до 15–16 px</dd>
+</dl>
+<div class="links"><a href="https://genesy.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/gilan-0.jpg" width="1400" height="860" loading="lazy" alt="Gilan — «Here’s why we stand apart from the rest»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">07</span><h3>Gilan — «Here’s why we stand apart from the rest»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>склеенный контейнер из двух ячеек, одна залита акцентом; пункт = заголовок + приглушённое пояснение</dd>
+<dt>Чем интересен</dt><dd>хорошая сторона — контрастная ячейка внутри одной рамки, как CTA-ячейка бенто</dd>
+<dt>Не брать</dt><dd>фиолетовую заливку — у zeeframes это лайм или белая ячейка</dd>
+</dl>
+<div class="links"><a href="https://gilan.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/autr-0.jpg" width="1400" height="839" loading="lazy" alt="autr — «Other agencies / Working with autr»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">08</span><h3>autr — «Other agencies / Working with autr»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>белая и чёрная половины одного бенто, крупный заголовок сверху, большое пустое поле, текст и строки с волосками прижаты к низу</dd>
+<dt>Чем интересен</dt><dd>стороны подписаны огромным капсом, а пункты — тихие строки на линейках: контраст масштаба</dd>
+<dt>Не брать</dt><dd>моноширинные eyebrow «The Difference» / «Why Us» — заменить на гротеск</dd>
+</dl>
+<div class="links"><a href="https://autr-ai.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/flowpilot-0.jpg" width="1400" height="767" loading="lazy" alt="FlowPilot — «Manual work is quietly killing your momentum»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">09</span><h3>FlowPilot — «Manual work is quietly killing your momentum»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow-пилюля, иконка в маленьком квадрате ~32 px с заливкой 10 % в шапке каждой карточки, белая и чёрная карточки с радиусом 14 px</dd>
+<dt>Чем интересен</dt><dd>та же иконка-в-плашке, что в карточках zeeframes, становится подписью стороны</dd>
+<dt>Не брать</dt><dd>лаймовая eyebrow — не аргумент; по формам хорош и без неё</dd>
+</dl>
+<div class="links"><a href="https://flow-pilot.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/offset354-0.jpg" width="790" height="746" loading="lazy" alt="OFFSET354 — «A different approach to digital design»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">10</span><h3>OFFSET354 — «A different approach to digital design»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>крупный текст пунктов 18–20 px, белая и чёрная карточки 24 px радиуса, маркеры-плашки</dd>
+<dt>Чем интересен</dt><dd>дизайн-студия против «Other Agencies»; плохая сторона отмечена спокойным «—», а не красным ✕</dd>
+<dt>Не брать</dt><dd>градиентные квадратики со звёздочкой — заменить на плоский ✦ в плашке акцента 10 %</dd>
+</dl>
+<div class="links"><a href="https://offset354.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/adverix-0.jpg" width="1400" height="791" loading="lazy" alt="Adverix — «Why leading teams always choose Adverix»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">11</span><h3>Adverix — «Why leading teams always choose Adverix»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow-пилюля, пункты — контурные чипы-пилюли, как фильтр-чипы на /work</dd>
+<dt>Чем интересен</dt><dd>чипы у «Other Agencies» бледнеют к краям, у Adverix чёткие на тёмной карточке</dd>
+<dt>Не брать</dt><dd>коричневую палитру и затухание по краям делать мягче</dd>
+</dl>
+<div class="links"><a href="https://adverix.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/coachverse-0.jpg" width="1200" height="751" loading="lazy" alt="CoachVerse — «Without / With CoachVerse»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">12</span><h3>CoachVerse — «Without / With CoachVerse»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>тёмная секция, eyebrow-пилюля COMPARISON, карточка с тонкой рамкой и волосками между пунктами</dd>
+<dt>Чем интересен</dt><dd>разный вес сторон: «без» — голый список на фоне, «с» — поднятая карточка</dd>
+<dt>Не брать</dt><dd>белые кружки с галочкой — сделать тоньше</dd>
+</dl>
+<div class="links"><a href="https://coachverse.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/cushion-0.jpg" width="944" height="821" loading="lazy" alt="Cushion — «Discord vs Cushion»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">13</span><h3>Cushion — «Discord vs Cushion»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>светлая секция, белая карточка 20 px радиуса с чёрной пилюлей-кнопкой, гротеск строчными</dd>
+<dt>Чем интересен</dt><dd>наложение: карточка Cushion лежит поверх карточки Discord и выше неё</dd>
+<dt>Не брать</dt><dd>красные ✕ и зелёные ✓ — перевести в монохром</dd>
+</dl>
+<div class="links"><a href="https://cushion.so/discord-alternative/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+</div></section>
+<section class="group" id="rows"><h2>Строки-пары <span>9</span></h2><div class="grid">
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/trafflane-0.jpg" width="1400" height="685" loading="lazy" alt="Trafflane — «Structural Differences»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">14</span><h3>Trafflane — «Structural Differences»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow-пилюля, строки с волосками, капс-надстрочники слева (INCENTIVE, STRUCTURE…), тёмная карточка-герой</dd>
+<dt>Чем интересен</dt><dd>каждая строка — пара по одному критерию, а подписи критериев вынесены за карточки</dd>
+<dt>Не брать</dt><dd>зелёное свечение под карточкой</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/trafflane-5" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://trafflane.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/zvonok-0.jpg" width="1400" height="756" loading="lazy" alt="Звонок — «Классический робот / Голосовой робот»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">15</span><h3>Звонок — «Классический робот / Голосовой робот»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>H2 слева, критерии строками с волосками, маркеры ✦, одна карточка с акцентной рамкой</dd>
+<dt>Чем интересен</dt><dd>критерий слева соединяет обе стороны в строку; ✦ — те же звёздочки, что в чек-листах zeeframes</dd>
+<dt>Не брать</dt><dd>розовый бейдж «+ИИ» у заголовка</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/zvonok-7" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://zvonok.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/formio-0.jpg" width="1400" height="800" loading="lazy" alt="Formio — «From chaos to clarity»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">16</span><h3>Formio — «From chaos to clarity»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>тёмное бенто, склеенные ячейки, контрастная CTA-ячейка, стеклянный 3D-пузырь — как на главной zeeframes</dd>
+<dt>Чем интересен</dt><dd>в каждой ячейке проблема сверху, «SOLUTION» снизу: пары живут внутри одной карточки</dd>
+<dt>Не брать</dt><dd>малиновую ячейку перекрасить; стекло оставить только как акцент</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/formio-1" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://www.formiodesign.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/agnos-0.jpg" width="640" height="746" loading="lazy" alt="Agnos — «Other agencies / Agnos agency»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">17</span><h3>Agnos — «Other agencies / Agnos agency»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>крупные строки 20 px на волосках, одна колонка залита акцентом, подпись сторон как заголовок столбца</dd>
+<dt>Чем интересен</dt><dd>пары стоят строго напротив: «Slow, unclear timelines» ↔ «Clear weekly updates»</dd>
+<dt>Не брать</dt><dd>переключатель-картинку в заголовке и оранжевую заливку</dd>
+</dl>
+<div class="links"><a href="https://agnos-wbs.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/lumivest-0.jpg" width="1330" height="658" loading="lazy" alt="Lumivest — «Education That Delivers Results»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">18</span><h3>Lumivest — «Education That Delivers Results»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow и H2 слева, справа пары строками, полосатость едва заметна, крупный текст</dd>
+<dt>Чем интересен</dt><dd>каждая строка — антоним: Deep Understanding ↔ Surface Knowledge, связь видна без значков</dd>
+<dt>Не брать</dt><dd>серифную гарнитуру подписей сторон</dd>
+</dl>
+<div class="links"><a href="https://lumivest.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/unmade-0.jpg" width="1400" height="1459" loading="lazy" alt="Unmade — «What makes Unmade better?»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">19</span><h3>Unmade — «What makes Unmade better?»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>капс-eyebrow, H2 слева, строки во всю ширину на волосках, акцентный кружок-отметка ровно на стыке сторон</dd>
+<dt>Чем интересен</dt><dd>отметка стоит между «альтернативой» и «Unmade» — как стрелка превращения одного в другое; левая сторона приглушена</dd>
+<dt>Не брать</dt><dd>восемь строк — оставить пять</dd>
+</dl>
+<div class="links"><a href="https://www.unmade.com/why-unmade" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/panoptive-0.jpg" width="1200" height="464" loading="lazy" alt="Panoptive — «Reconstruction → Continuous record»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">20</span><h3>Panoptive — «Reconstruction → Continuous record»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>белые карточки-строки справа, кружок со стрелкой между сторонами — как круглая кнопка ↗ в списках zeeframes</dd>
+<dt>Чем интересен</dt><dd>плохая сторона выцветает: и заголовок «Reconstruction», и её строки почти прозрачны</dd>
+<dt>Не брать</dt><dd>моноширинные надстрочники MANUAL OVERSIGHT — заменить на гротеск-капс</dd>
+</dl>
+<div class="links"><a href="https://www.panoptive.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/alphaos-0.jpg" width="1380" height="965" loading="lazy" alt="AlphaOS — «AI coding shouldn’t cost this much»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">21</span><h3>AlphaOS — «AI coding shouldn’t cost this much»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>одна белая карточка на кремовом фоне, строки на волосках, пилюля-кнопка со стрелкой</dd>
+<dt>Чем интересен</dt><dd>пара «старое → новое» внутри одной строки: серый текст слева, стрелка, чёрный справа</dd>
+<dt>Не брать</dt><dd>серифный H2 и цветные кружки ✕/✓</dd>
+</dl>
+<div class="links"><a href="https://alphaos.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/riviera-0.jpg" width="1072" height="652" loading="lazy" alt="Riviera — «Guests don’t wait. They just leave.»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">22</span><h3>Riviera — «Guests don’t wait. They just leave.»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>капс-eyebrow, белые карточки 12 px на кремовом, капс-надстрочники WITHOUT / WITH внутри карточки</dd>
+<dt>Чем интересен</dt><dd>пара привязана к ситуации: у каждой карточки время и сцена, под ней «без» и «с»</dd>
+<dt>Не брать</dt><dd>серифный курсивный заголовок</dd>
+</dl>
+<div class="links"><a href="https://www.withriviera.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+</div></section>
+<section class="group" id="matrix"><h2>Таблица-матрица <span>8</span></h2><div class="grid">
+<article class="card" data-src="rf">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/jimini-0.jpg" width="1400" height="664" loading="lazy" alt="Jimini Health — «With / Without Jimini»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">23</span><h3>Jimini Health — «With / Without Jimini»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>H2 строчными слева, пилюля-кнопка со стрелкой, справа светлая матрица с тонкими линиями, пять строк</dd>
+<dt>Чем интересен</dt><dd>в строках жирным выделено главное слово, остальное приглушено — таблица читается как список</dd>
+<dt>Не брать</dt><dd>сиреневый фон и зелёные ✓ — только монохром</dd>
+</dl>
+<div class="links"><a href="https://referest.ru/screens/jimini-health-1" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://jiminihealth.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/bloome-0.jpg" width="1200" height="628" loading="lazy" alt="Bloome — «Why People Choose US?»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">24</span><h3>Bloome — «Why People Choose US?»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 9/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow-пилюля, четыре строки крупным текстом 18 px, колонка героя тонированной подложкой, радиус 16 px</dd>
+<dt>Чем интересен</dt><dd>матрица выглядит как спокойный список: у «others» бледный кружок, у своих — один акцентный</dd>
+<dt>Не брать</dt><dd>заголовок «US?» капсом</dd>
+</dl>
+<div class="links"><a href="https://bloomeskincare.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/kyzen-0.jpg" width="1400" height="746" loading="lazy" alt="Kyzen — «From manual marketing to AI-powered growth»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">25</span><h3>Kyzen — «From manual marketing to AI-powered growth»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4,5/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>eyebrow-пилюля слева, H2 справа во второй колонке, названия строк приглушённым мелким текстом, чёрная колонка-герой</dd>
+<dt>Чем интересен</dt><dd>короткие ответы («2–3 weeks» ↔ «1–2 days») вместо галочек: разница в цифрах</dd>
+<dt>Не брать</dt><dd>серифный курсив в заголовке</dd>
+</dl>
+<div class="links"><a href="https://kyzen.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/alkera-0.jpg" width="1288" height="672" loading="lazy" alt="Alkera — «Generic agent / Alkera»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">26</span><h3>Alkera — «Generic agent / Alkera»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>белая карточка 16 px, капс-подписи сторон, строки на волосках, крупный текст 18 px, тонкие ✕ и ✓</dd>
+<dt>Чем интересен</dt><dd>матрица без названий строк: пары ставятся друг против друга, одна вертикальная линия делит стороны</dd>
+<dt>Не брать</dt><dd>выделенное слово-плашку и 3D-кубик в заголовке</dd>
+</dl>
+<div class="links"><a href="https://alkera.ai/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/ergo-0.jpg" width="1328" height="874" loading="lazy" alt="Ergo — «What teams stop guessing about.»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">27</span><h3>Ergo — «What teams stop guessing about.»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>H2 строчными, колонка критериев слева, две высокие карточки с тонкой рамкой и скруглением</dd>
+<dt>Чем интересен</dt><dd>ответы — фразы без значков: «What one PM heard» ↔ «Aggregated requests across every conversation»</dd>
+<dt>Не брать</dt><dd>бледно-зелёную заливку и ошибку «Before Ergo» над колонкой критериев</dd>
+</dl>
+<div class="links"><a href="https://ergo-dev.webflow.io/product/meeting-recording" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/forja-0.jpg" width="1400" height="861" loading="lazy" alt="Forja — «Us vs the rest»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">28</span><h3>Forja — «Us vs the rest»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>контурный бейдж-eyebrow, пункт = тезис + приглушённое пояснение, строки с «+» в конце — как пункты FAQ</dd>
+<dt>Чем интересен</dt><dd>плохая сторона — голый текст на фоне, хорошая — тонированные строки с уголками-скобками</dd>
+<dt>Не брать</dt><dd>уголки-скобки на ячейках и плавающую кнопку Framer справа</dd>
+</dl>
+<div class="links"><a href="https://breezy-behaviors-584817.framer.app/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/neuralos-0.jpg" width="1400" height="1024" loading="lazy" alt="NeuralOS — «The old vs. the intelligent way»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">29</span><h3>NeuralOS — «The old vs. the intelligent way»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>тёмная матрица со светлой колонкой-героем — белая ячейка внутри тёмной сетки, как CTA в бенто</dd>
+<dt>Чем интересен</dt><dd>светлая колонка «NeuralOS» врезана в тёмную таблицу — контраст одной ячейки</dd>
+<dt>Не брать</dt><dd>серифные названия строк и серую подложку секции</dd>
+</dl>
+<div class="links"><a href="https://neural-os.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+<article class="card" data-src="web">
+<figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/gutgutgoose-0.jpg" width="1400" height="775" loading="lazy" alt="GutGutGoose — «vs. generic probiotics»"></div></figure>
+<div class="meta">
+<div class="head"><span class="num">30</span><h3>GutGutGoose — «vs. generic probiotics»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score" title="оценка «одна студия» из 5 · баллы рубрики из 12">студия 4/5 · рубрика 8/12</span></div>
+<dl>
+<dt>Совпадает</dt><dd>тёмная скруглённая секция-карточка, тонированная колонка-герой, волоски, тонкие ✓ и ✕</dd>
+<dt>Чем интересен</dt><dd>колонка героя подсвечена мягкой плашкой по всей высоте, чужая колонка приглушена</dd>
+<dt>Не брать</dt><dd>зелёную палитру</dd>
+</dl>
+<div class="links"><a href="https://gutgutgoose.com/" target="_blank" rel="noopener">сайт ↗</a></div>
+</div></article>
+</div></section>
+  <section class="group" id="reserve"><h2>Запас <span>10</span></h2><p class="lead">Оценка «одна студия» 3,5: форма верная, но есть стоп-деталь или нет своей идеи. В основную подборку не вошли.</p><div class="grid small">
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/awen-0.jpg" width="1072" height="654" loading="lazy" alt="Awen — «Traditional AI tools / Awen»"></div></figure><div class="meta"><div class="head"><h3>Awen — «Traditional AI tools / Awen»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">чисто и крупно, но это стандартные белая и чёрная карточки без своей идеи</p><div class="links"><a href="https://www.awen.ai/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/exion-0.jpg" width="1400" height="781" loading="lazy" alt="Exion — «Built to stand apart from the rest»"></div></figure><div class="meta"><div class="head"><h3>Exion — «Built to stand apart from the rest»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">шапка H2 слева + абзац справа как у zeeframes, но сами карточки — шаблон «Other tools / мы»</p><div class="links"><a href="https://exion.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/settle-0.jpg" width="1400" height="855" loading="lazy" alt="Settle — «The old way / The Settle way»"></div></figure><div class="meta"><div class="head"><h3>Settle — «The old way / The Settle way»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">маркеры − и + как в FAQ zeeframes, но скриншоты-иллюстрации сверху карточек перегружают</p><div class="links"><a href="https://settle.co/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/caremind-0.jpg" width="1400" height="709" loading="lazy" alt="CareMind — «The old way / The CareMind way»"></div></figure><div class="meta"><div class="head"><h3>CareMind — «The old way / The CareMind way»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">фото-карточка героя и серифный H2 уводят от zeeframes</p><div class="links"><a href="https://caremind.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/valist-0.jpg" width="1080" height="933" loading="lazy" alt="Valist — чипы «хаос / порядок»"></div></figure><div class="meta"><div class="head"><h3>Valist — чипы «хаос / порядок»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 6/12</span></div>
+<p class="note">сильная идея: чипы у чужих рассыпаны, у своих собраны; но размытое фото и игрушечные наклоны</p><div class="links"><a href="https://valist.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/fade-0.jpg" width="1400" height="1030" loading="lazy" alt="Fade — «Comparison Table»"></div></figure><div class="meta"><div class="head"><h3>Fade — «Comparison Table»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">маркеры ✦ и волоски как у zeeframes, но у «Fade» две колонки против одной у «Others» и мелкий текст</p><div class="links"><a href="https://fade-template.framer.website/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/pace-0.jpg" width="1400" height="731" loading="lazy" alt="Pace — «Old vs New»"></div></figure><div class="meta"><div class="head"><h3>Pace — «Old vs New»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">строки-пары с приглушённой стороной Traditional BPO; кадр из галереи Saaspo, живой блок уже изменён</p><div class="links"><a href="https://withpace.com/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/zyner-0.jpg" width="1345" height="909" loading="lazy" alt="Zyner — «Why Growth Teams Choose Us»"></div></figure><div class="meta"><div class="head"><h3>Zyner — «Why Growth Teams Choose Us»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">иконки в плашках и шапка как у zeeframes, но на стороне «они» лишние табы-контролы</p><div class="links"><a href="https://zyner.io/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="rf"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/magicbell-0.jpg" width="1400" height="1531" loading="lazy" alt="MagicBell — «From Zero to Magic in an hour»"></div></figure><div class="meta"><div class="head"><h3>MagicBell — «From Zero to Magic in an hour»</h3></div>
+<div class="tags"><span class="tag rf">referest</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">строки-пары с эхом глагола («Customize the design» ↔ «Customize…»), но тёмно-синяя палитра и иконки-клипарт</p><div class="links"><a href="https://referest.ru/screens/magicbell" target="_blank" rel="noopener">карточка referest ↗</a> <a href="https://www.magicbell.com/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+<article class="card" data-src="web"><figure><div class="shot" tabindex="0" role="button" aria-label="Раскрыть кадр целиком"><img src="img/ohhmydesign-0.jpg" width="1400" height="918" loading="lazy" alt="OhhMyDesign — «Same brief. Different studio.»"></div></figure><div class="meta"><div class="head"><h3>OhhMyDesign — «Same brief. Different studio.»</h3></div>
+<div class="tags"><span class="tag ">интернет</span><span class="score">студия 3,5/5 · рубрика 7/12</span></div>
+<p class="note">дизайн-студия, блок оформлен как холст Figma с рамкой выделения; рукописный eyebrow и метафора-интерфейс</p><div class="links"><a href="https://ohhmydesign.com/" target="_blank" rel="noopener">сайт ↗</a></div></div></article>
+</div></section>
+  <section class="group" id="other">
+    <h2>Не открылись</h2>
+    <ul class="plain failed">
+      <li><span class="u">tsaplin.online</span> — домен больше не отвечает, кадр взят с referest</li>
+      <li><span class="u">camo, clariostudio, getveld (шаблоны Framer)</span> — превью не открылись</li>
+      <li><span class="u">rhive (шаблон Framer)</span> — блок закрыт cookie-баннером, переснять не удалось</li>
+      <li><span class="u">getvidflow.com, freetrade.io</span> — найдены в конце, не сняты</li>
+      <li><span class="u">behance.net</span> — из headless-браузера отвечает ошибкой, концепты только с Dribbble</li>
+      <li><span class="u">207 секций referest</span> — без картинки (видео), посмотреть нельзя</li>
+    </ul>
+  </section>
+</div>
+<script>
+document.querySelectorAll('.seg').forEach(function(seg){
+  seg.addEventListener('click',function(ev){
+    var b=ev.target.closest('button'); if(!b) return;
+    var img=seg.closest('figure').querySelector('img');
+    img.src=b.dataset.src;
+    seg.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b?'true':'false');});
+  });
+});
+document.querySelectorAll('.shot').forEach(function(s){function t(){s.classList.toggle('full');}s.addEventListener('click',t);s.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();t();}});});
+document.querySelectorAll('.filter button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var f=b.dataset.f;
+    document.querySelectorAll('.filter button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+    document.querySelectorAll('.group:not(#reserve):not(#other) .card').forEach(function(c){c.hidden=(f==='rf'&&c.dataset.src!=='rf');});
+  });
+});
+</script>
